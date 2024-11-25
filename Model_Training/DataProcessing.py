@@ -24,7 +24,7 @@ def load_annotations(annotation_dir):
                 w = int(w)
                 h = int(h)
                 #frame_num, vehicle_id, x1, y1, x2, y2 = map(int, line.split())
-                cx, cy = x + w/2.0, y + h/2.0
+                cx, cy = x + w/2.0, y - h/2.0
                 #cx, cy = (x1 + x2)/2.0, (y1 + y2)/2.0
                 data.append((frame_num, vehicle_id, cx, cy))
             annotations[video_id] = data
@@ -62,7 +62,7 @@ def load_video_data(video_dir, annotation_dir):
                 label = int(label)
                 if label == 1:
                     ids.add(vehicle_id)    
-        if len(ids) <= 1:
+        if len(ids) == 1:
             continue    
         
         cap = cv2.VideoCapture(video_path)
