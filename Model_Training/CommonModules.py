@@ -2,12 +2,12 @@ import torch
 import torch.nn as nn
 
 class TubeletEmbedding(nn.Module):
-    def __init__(self, in_channels, embed_dim, patch_size=(2, 16, 16)) -> None:
+    def __init__(self, in_channels, embed_dim, patch_size=(5, 16, 16)) -> None:
         super(TubeletEmbedding, self).__init__()
         self.proj = nn.Conv3d(in_channels, embed_dim, kernel_size=patch_size, stride=patch_size)
         
     def forward(self, x):
-        x = self.proj(x)                     #Convert frames to tubelets by 3D Convolution of 2 frames at a time
+        x = self.proj(x)                     #Convert frames to tubelets by 3D Convolution of 5 frames at a time
         return x.flatten(2).transpose(1, 2)  #Flatten the tubelets to convert them into tokens which will be input to the model
     
     
