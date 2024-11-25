@@ -2,7 +2,7 @@ from Model import FactorizedEncoder
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
-from DataProcessing2 import TrafficDataset, load_annotations, normalize_annotations, load_video_data, collate_fn
+from DataProcessing import TrafficDataset, load_annotations, normalize_annotations, load_video_data, collate_fn
 
 
 def is_accident(pred, threshold=0.05):
