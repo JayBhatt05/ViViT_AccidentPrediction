@@ -81,7 +81,33 @@ def load_video_data(video_dir, annotation_dir):
         
     return video_data        
 
+import torch
+import numpy as np
+from torch.nn.utils.rnn import pad_sequence
+
+def collate_fn(batch):
+    frames_batch = [item[0] for item in batch]  # List of frame tensors
+    targets_batch = [item[1] for item in batch]  # List of target tensors (vehicle centers)
+
+    frames_padded = pad_sequence(frames_batch, batch_first=True, padding_value=0)
     
+    # Pad targets to the maximum number of vehicles in the batch
+    max_vehicles = max([targets.size(0) for targets in targets_batch])
+    padded_targets = []
+    
+    for targets in targets_batch:
+        num_vehicles = targets.size(0)
+        if num_vehicles < max_vehicles:
+            # Pad with (0, 0) to match the maximum number of vehicles
+            padded_targets.append(torch.cat([targets, torch.zeros(max_vehicles - num_vehicles, 2)], dim=0))
+        else:
+            padded_targets.append(targets)
+    
+    padded_targets = torch.stack(padded_targets)
+    
+    return frames_padded, padded_targets
+    
+
 class TrafficDataset(Dataset):
     def __init__(self, video_data, annotations, window_size):
         self.video_data = video_data
